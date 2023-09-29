@@ -1,6 +1,6 @@
 ---
 title: "Gov 50 Final Project"
-author: "Your Name Here"
+author: "Sasha Hitachi"
 description: "My final project"
 output:
   distill::distill_article:
@@ -11,4 +11,4 @@ output:
 
 ## Project thoughts
 
-I am interested in exploring data related to...
+I am interested in exploring data related to the criminal justice, as I spent the past summer working in the judicial system. I saw firsthand that certain communities are more likely to be over-policed and over-sentenced, and through this project, I would like to delve into related data and statistics.
