@@ -115,7 +115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1517,8 +1517,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 
 <div class="d-article">
-<h2 id="project-thoughts">Project thoughts</h2>
-<p>I am interested in exploring data related to the criminal justice, as I spent the past summer working in the judicial system. I saw firsthand that certain communities are more likely to be over-policed and over-sentenced, and through this project, I would like to delve into related data and statistics.</p>
+<h2 id="project-proposal">Project proposal</h2>
+<p>Do the ideological directions of decisions made by federal circuit judges match the predominant ideological leanings of the state or territory in which the case was decided? For example, within two cases that are similar in nature, is a judge based in Tennessee more likely to decide the case conservatively as compared to a judge in Massachusetts? I expect that outcomes of cases decided in traditionally conservative states will also trend conservative, while the outcomes of cases in traditionally liberal states will trend liberal. I intend to measure whether a state is conservative, liberal, or a swing state using election outcomes from 2008 and 2012 Presidential Elections. I will then take case data from federal circuit courts between the years 2008-2012 and using an explanatory variable of interest (which state the case was decided in), measure the outcome variable whether the case was decided liberally =1 or conservatively = 0. I will also group by case type to ensure I am comparing cases that are similar in nature. For example, Commercial Regulation cases are coded as 18, and Freedom of Expression cases are coded as 13. After grouping by type of case, I will measure the average decision outcome (conservative or liberal) by state and compare them. The above variables are measured using Robert Carp and Kenneth Manning’s “U.S. District Court Database” dataset. After conducting this analysis, an average nearing 0 for conservative vs. liberal case outcomes would support my hypothesis that cases decided in red states are typically more conservative. Likewise, an average nearing 1 for case outcomes in liberal states would support a hypothesis that decisions made in blue electorate states are more liberal.</p>
+<h2 id="proposed-dataset">Proposed dataset</h2>
+<p>Robert A. Carp and Kenneth L. Manning. 2016. “U.S.District Court Database.” 2016 version n=110977.
+URL: <a href="http://districtcourtdatabase.org" class="uri">http://districtcourtdatabase.org</a></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
