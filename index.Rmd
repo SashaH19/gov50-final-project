@@ -16,3 +16,36 @@ Do the ideological directions of decisions made by federal circuit judges match 
 ## Proposed dataset
 Robert A. Carp and Kenneth L. Manning. 2016. “U.S.District Court Database.” 2016 version n=110977.
 URL: http://districtcourtdatabase.org
+
+## Visualizations
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(readxl)
+
+fdcdata <- read_excel("data/fdcdata_thru_2012.xlsx")
+
+fdcdata <- fdcdata |>
+  filter(year >= 2008) |>
+  mutate(judge_party = case_when(
+    party == 1 ~ "Democrat",
+    party == 2 ~ "Republican",
+    party == 99 ~ "Independent / Other / Unknown"))|>
+  mutate(case_outcome = if_else(libcon == 1, "Liberal", "Conservative"))
+
+party_by_case_outcome <- fdcdata |>
+  group_by(judge_party) |>
+  summarize(case_average = mean(libcon),
+            case_sd = sd(libcon))
+  
+  knitr::kable(party_by_case_outcome, col.names = c("Judge Party", "Case Outcome Average", "Case Outcome SD"), digits = 3)
+
+
+
+
+
+```
+Based on the above data, across all judges surveyed during and after the year 2008, the average outcome of cases decided by Democrat judges was 0.466, with 0 being the case was decided against the defendant and 1 being in favor of the defendant. Average outcome for cases decided by Republican judges was 0.372, showing that on average, Republican judges are more likely to decide cases conservatively (against the defendant). Within the group of judges who are Independent or whose political affiliation is unknown, average case outcome fell between Democrat and Republican outcomes at 0.420. 
+
+
