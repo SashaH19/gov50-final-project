@@ -115,7 +115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["data/fdcdata_thru_2012.xlsx","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["data/fdcdata_thru_2012.xlsx","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-1-1.png","index_files/figure-html5/unnamed-chunk-1-2.png","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1540,7 +1540,60 @@ URL: <a href="http://districtcourtdatabase.org" class="uri">http://districtcourt
 <span>    <span class='va'>party</span> <span class='op'>==</span> <span class='fl'>99</span> <span class='op'>~</span> <span class='st'>"Independent / Other / Unknown"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>|&gt;</span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>case_outcome <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/if_else.html'>if_else</a></span><span class='op'>(</span><span class='va'>libcon</span> <span class='op'>==</span> <span class='fl'>1</span>, <span class='st'>"Liberal"</span>, <span class='st'>"Conservative"</span><span class='op'>)</span><span class='op'>)</span></span>
 <span></span>
-<span><span class='va'>party_by_case_outcome</span> <span class='op'>&lt;-</span> <span class='va'>fdcdata</span> <span class='op'>|&gt;</span></span>
+<span><span class='co'># create density histogram of lib con values for both republican and liberal judges</span></span>
+<span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/tidymodels/infer'>infer</a></span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>02138</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>party_boots</span> <span class='op'>&lt;-</span> <span class='va'>fdcdata</span> <span class='op'>|&gt;</span></span>
+<span><span class='fu'><a href='https://infer.tidymodels.org/reference/rep_sample_n.html'>rep_slice_sample</a></span><span class='op'>(</span>prop<span class='op'>=</span><span class='fl'>1</span>, replace<span class='op'>=</span><span class='cn'>TRUE</span>, reps<span class='op'>=</span><span class='fl'>1000</span><span class='op'>)</span><span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>replicate</span>, <span class='va'>judge_party</span><span class='op'>)</span><span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span>case_outcome_mean <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>libcon</span><span class='op'>)</span><span class='op'>)</span><span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span></span>
+<span>    names_from <span class='op'>=</span> <span class='va'>judge_party</span>,</span>
+<span>    values_from <span class='op'>=</span> <span class='va'>case_outcome_mean</span><span class='op'>)</span></span>
+<span></span>
+<span></span>
+<span><span class='va'>Democrat_outcome_ci_95</span> <span class='op'>&lt;-</span> <span class='va'>party_boots</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>replicate</span>, <span class='va'>Democrat</span><span class='op'>)</span><span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://infer.tidymodels.org/reference/get_confidence_interval.html'>get_ci</a></span><span class='op'>(</span>level<span class='op'>=</span><span class='fl'>0.95</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>Republican_outcome_ci_95</span> <span class='op'>&lt;-</span> <span class='va'>party_boots</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>replicate</span>, <span class='va'>Republican</span><span class='op'>)</span><span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://infer.tidymodels.org/reference/get_confidence_interval.html'>get_ci</a></span><span class='op'>(</span>level<span class='op'>=</span><span class='fl'>0.95</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>Democrat_outcome_distribution</span> <span class='op'>&lt;-</span> <span class='va'>party_boots</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x<span class='op'>=</span><span class='va'>Democrat</span><span class='op'>)</span><span class='op'>)</span><span class='op'>+</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_histogram.html'>geom_histogram</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y<span class='op'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes_eval.html'>after_stat</a></span><span class='op'>(</span><span class='va'>density</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>+</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_abline.html'>geom_vline</a></span><span class='op'>(</span>xintercept<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span><span class='va'>Democrat_outcome_ci_95</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>Republican_outcome_distribution</span> <span class='op'>&lt;-</span> <span class='va'>party_boots</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x<span class='op'>=</span><span class='va'>Republican</span><span class='op'>)</span><span class='op'>)</span><span class='op'>+</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_histogram.html'>geom_histogram</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y<span class='op'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes_eval.html'>after_stat</a></span><span class='op'>(</span><span class='va'>density</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>+</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_abline.html'>geom_vline</a></span><span class='op'>(</span>xintercept<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span><span class='va'>Republican_outcome_ci_95</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>Democrat_outcome_ci_95</span></span></code></pre>
+</div>
+<pre><code># A tibble: 1 × 2
+  lower_ci upper_ci
+     &lt;dbl&gt;    &lt;dbl&gt;
+1    0.454    0.479</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>Republican_outcome_ci_95</span></span></code></pre>
+</div>
+<pre><code># A tibble: 1 × 2
+  lower_ci upper_ci
+     &lt;dbl&gt;    &lt;dbl&gt;
+1    0.361    0.384</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>Democrat_outcome_distribution</span></span></code></pre>
+</div>
+<img src="index_files/figure-html5/unnamed-chunk-1-1.png" width="624" />
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>Republican_outcome_distribution</span></span></code></pre>
+</div>
+<p><img src="index_files/figure-html5/unnamed-chunk-1-2.png" width="624" /></p>
+</div>
+<p>The above graphs show the distributions for the libcon index (how liberal or conservatively a case is decided: 0 is conservative and 1 is liberal) based on party. As we can observe, the lower and upper bounds of a 95% confidence interval for the distribution of Republican judges are 0.3614156 and 0.3839182 respectively. For Democrat judges, the bounds were 0.4539483 and 0.4790652 respectively. From this, we can observe that on average, Republican judges tend to vote more conservatively.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>party_by_case_outcome</span> <span class='op'>&lt;-</span> <span class='va'>fdcdata</span> <span class='op'>|&gt;</span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>judge_party</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span>case_average <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>libcon</span><span class='op'>)</span>,</span>
 <span>            case_sd <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>libcon</span><span class='op'>)</span><span class='op'>)</span></span>
@@ -1575,7 +1628,7 @@ URL: <a href="http://districtcourtdatabase.org" class="uri">http://districtcourt
 </table>
 </div>
 <p>Based on the above data, across all judges surveyed during and after the year 2008, the average outcome of cases decided by Democrat judges was 0.466, with 0 being the case was decided against the defendant and 1 being in favor of the defendant. Average outcome for cases decided by Republican judges was 0.372, showing that on average, Republican judges are more likely to decide cases conservatively (against the defendant). Within the group of judges who are Independent or whose political affiliation is unknown, average case outcome fell between Democrat and Republican outcomes at 0.420.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

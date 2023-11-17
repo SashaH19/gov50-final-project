@@ -18,6 +18,7 @@ Robert A. Carp and Kenneth L. Manning. 2016. “U.S.District Court Database.” 
 URL: http://districtcourtdatabase.org
 
 ## Visualizations
+
 ```{r}
 library(tidyverse)
 library(ggplot2)
@@ -34,6 +35,44 @@ fdcdata <- fdcdata |>
     party == 99 ~ "Independent / Other / Unknown"))|>
   mutate(case_outcome = if_else(libcon == 1, "Liberal", "Conservative"))
 
+# create density histogram of lib con values for both republican and liberal judges
+
+library(infer)
+set.seed(02138)
+
+party_boots <- fdcdata |>
+rep_slice_sample(prop=1, replace=TRUE, reps=1000)|>
+  group_by(replicate, judge_party)|>
+  summarize(case_outcome_mean = mean(libcon))|>
+  pivot_wider(
+    names_from = judge_party,
+    values_from = case_outcome_mean)
+
+
+Democrat_outcome_ci_95 <- party_boots |>
+  select(replicate, Democrat)|>
+  get_ci(level=0.95)
+
+Republican_outcome_ci_95 <- party_boots |>
+  select(replicate, Republican)|>
+  get_ci(level=0.95)
+
+Democrat_outcome_distribution <- party_boots |>
+  ggplot(aes(x=Democrat))+geom_histogram(aes(y=after_stat(density)))+geom_vline(xintercept=unlist(Democrat_outcome_ci_95))
+
+Republican_outcome_distribution <- party_boots |>
+  ggplot(aes(x=Republican))+geom_histogram(aes(y=after_stat(density)))+geom_vline(xintercept=unlist(Republican_outcome_ci_95))
+
+Democrat_outcome_ci_95
+Republican_outcome_ci_95
+Democrat_outcome_distribution
+Republican_outcome_distribution
+
+
+```
+The above graphs show the distributions for the libcon index (how liberal or conservatively a case is decided: 0 is conservative and 1 is liberal) based on party. As we can observe, the lower and upper bounds of a 95% confidence interval for the distribution of Republican judges are 0.3614156	and 0.3839182 respectively. For Democrat judges, the bounds were 0.4539483 and 0.4790652 respectively. From this, we can observe that on average, Republican judges tend to vote more conservatively. 
+
+```{r}
 party_by_case_outcome <- fdcdata |>
   group_by(judge_party) |>
   summarize(case_average = mean(libcon),
