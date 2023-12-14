@@ -17,12 +17,12 @@ knitr::include_graphics("data/lawbench.jpg")
 ## Introduction
 Whenever a vacancy arises in a federal district court judgeship, the President and Senate have respective responsibilities of nominating and confirming candidates. There are few formal restrictions on who can be nominated, but customarily, the candidates for these positions are chosen in consultation with the senators of the home state in which the district is located. To illustrate this practice, if a vacancy arises in the United States District Court for the Middle District of Tennessee, the President will consult with the senators from Tennessee. If the senators are of the same political party as the President, the state senators will typically identify candidates for nomination. Even if the senators are not of the same party, it remains customary to still consult both home state Senators to determine acceptability of the candidate (Steven Rutkus, 2016). 
 
-Given the often partisan nature of these proceedings, I intend to evaluate whether the political party of a ruling judge has any impact on the average case outcome for or against defendants / petitioners. Using data from federal district courts, I will divide the cases by category, looking at issues that may be more politicized, such as alien petitions or free speech. I then will analyze if there is a statistically significant difference in average ruling between Democrat and Republican judges. I hypothesize that the political party of the judge deciding the case will have some correlation with the outcome of a case, and that on average, Democrats will be more likely than Republicans to rule in favor a defendant or petitioner.
+Given the often partisan nature of these proceedings, I intend to evaluate whether the political party of a ruling judge has any impact on the average case outcome for or against defendants / petitioners, specifically for cases concerning issues that may be partisan. Using data from federal district courts, I will divide the cases by category, looking at issues that may be more politicized, such as alien petitions or free speech. I then will analyze if there is a statistically significant difference in average ruling between Democrat and Republican judges. I hypothesize that the political party of the judge deciding the case will have some correlation with the outcome of a case, and that on average, Democrats will be more likely than Republicans to rule in favor a defendant or petitioner.
 
 ## Data
 To analyze my hypotheses, I employ the U.S. District Court Database dataset by Robert Carp and Kenneth Manning. The dataset is an observational cross-section, and contains virtually all federal district court decisions published since 1933 in which holdings can be interpreted through a binary (e.g. for or against petitioner, for or against free speech). The dataset contains information by case including judge party affiliation, how the case was decided (against or in favor of the defendant/petitioner), and the category of case. 
 
-I first divide the cases by category, and select several categories often discussed in relation to partisan politics like alien petitions, which concern petitions by non-citizens who might wish to immigrate to the US, freedom of expression, and environmental protection. Then, grouping by party, I measure the average of an outcome variable, which is whether a case is decided in favor of a defendant / petitioner (=1) or against (=0). An average nearing 0 in this index demonstrates a higher average of deciding against An average nearing 1 indicates a higher average of deciding in favor. To consider more recent trends and political issues, I filter the dataset to only include the years 2000-2012 and politicized case categories.
+I first divide the cases by category, and select several categories often discussed in relation to partisan politics like alien petitions, which concern petitions by non-citizens who might wish to immigrate to the US, freedom of expression, and environmental protection. Then, grouping by party, I measure the average of an outcome variable, which is whether a case is decided in favor of a defendant / petitioner (=1) or against (=0). An average nearing 0 in this index demonstrates a higher average of deciding against, while an average nearing 1 indicates a higher average of deciding in favor. To consider more recent trends and political issues, I filter the dataset to only include the years 2000-2012 and politicized case categories.
 
 ```{r}
 #libraries
@@ -132,7 +132,7 @@ ap_95 <- ap_boots |>
 
 #Bootstrap distribution and CI plot
 ap_boots_dist <- ap_boots|>
-  ggplot(aes(x=ATE))+geom_histogram(aes(y=after_stat(density)))+geom_vline(xintercept=unlist(ap_95))+labs(title = "Repeated Sampling of Case Outcome Difference Between Republican / Democrat Judges in Alien Petitions", x = "For or Against Index")+theme(plot.title = element_text(size = 9))
+  ggplot(aes(x=ATE))+geom_histogram(aes(y=after_stat(density)))+geom_vline(xintercept=unlist(ap_95))+labs(title = "Repeated Sampling of Case Outcome Difference Between Republican / Democrat Judges in Alien Petitions", x = "For or Against Index")+theme(plot.title = element_text(size = 7))
 
 ap_boots_dist
 
@@ -181,13 +181,13 @@ cc_95 <- cc_boots |>
 
 #Bootstrap distribution and CI plot
 cc_boots_dist <- cc_boots|>
-  ggplot(aes(x=ATE))+geom_histogram(aes(y=after_stat(density)))+geom_vline(xintercept=unlist(cc_95))+labs(title = "Repeated Sampling of Case Outcome Difference Between Republican / Democrat Judges in Criminal Court Motions", x = "For or Against Index")+theme(plot.title = element_text(size = 9))
+  ggplot(aes(x=ATE))+geom_histogram(aes(y=after_stat(density)))+geom_vline(xintercept=unlist(cc_95))+labs(title = "Repeated Sampling of Case Outcome Difference Between Republican / Democrat Judges in Criminal Court Motions", x = "For or Against Index")+theme(plot.title = element_text(size = 7))
 
 cc_boots_dist
 
 ```
 
-Partisan average outcomes in Criminal Court Motions
+Partisan Average outcomes in Criminal Court Motions
 
 Regression: After running a linear regression for Criminal Court Motion cases, the Y intercept is 0.410 when the ruling judge's political party is not Republican, or conversely, when the judge is a Democrat. This indicates that on the 0-1 index of ruling against or in favor of a petitioner, Democrat judges have an average ruling outcome of 0.410 points. This means that if a Democrat judge were to become Republican, there would be an expected -0.125 point decrease in average case outcome in favor of a defendant / petitioner. The median of the bootstrap distribution appears to be centered around this point difference.
 
@@ -228,7 +228,7 @@ ep_95 <- ep_boots |>
   get_ci(level=0.95)
 
 ep_boots_dist <- ep_boots|>
-  ggplot(aes(x=ATE))+geom_histogram(aes(y=after_stat(density)))+geom_vline(xintercept=unlist(ep_95))+labs(title = "Repeated Sampling of Case Outcome Difference Between Republican / Democrat Judges in Environmental Protection", x = "For or Against Index")+theme(plot.title = element_text(size = 9))
+  ggplot(aes(x=ATE))+geom_histogram(aes(y=after_stat(density)))+geom_vline(xintercept=unlist(ep_95))+labs(title = "Repeated Sampling of Case Outcome Difference Between Republican / Democrat Judges in Environmental Protection", x = "For or Against Index")+theme(plot.title = element_text(size = 7))
 
 ep_boots_dist
 
@@ -237,7 +237,7 @@ ep_boots_dist
 
 Partisan Average Outcomes in Environmental Protection Cases
 
-Regression: After running a linear regression for Environmental Protection cases, the Y intercept is 0.635 when the ruling judge's political party is not Republican, or conversely, when the judge is a Democrat. This indicates that on the 0-1 index of ruling against or in favor of a petitioner, Democrat judges have an average ruling outcome of 0.410 points. This means that if a Democrat judge were to become Republican, there would be an expected -0.117 point decrease in average case outcome in favor of a defendant / petitioner. The median of the bootstrap distribution appears to be centered around this point difference.
+Regression: After running a linear regression for Environmental Protection cases, the Y intercept is 0.635 when the ruling judge's political party is not Republican, or conversely, when the judge is a Democrat. This indicates that on the 0-1 index of ruling against or in favor of a petitioner, Democrat judges have an average ruling outcome of 0.635 points. This means that if a Democrat judge were to become Republican, there would be an expected -0.117 point decrease in average case outcome in favor of a defendant / petitioner. The median of the bootstrap distribution appears to be centered around this point difference.
 
 Null hypothesis: After taking the difference in means for case outcome by party, we create a bootstrap distribution with repeated sampling of this difference. A 95% confidence interval is employed, shown by the two vertical lines on the graph. A 95% confidence interval means that across the repeated samples, the true value of difference in case outcome by political party will fall within the interval. If there is no difference at all, which would be our null hypothesis, this would be indicated by 0 falling within the confidence interval. However, this does not happen above, leading us to conclude that there is a statistically significant difference between Environmental Protection cases decided by Republican and Democrat judges. 
 
@@ -274,7 +274,7 @@ foe_95 <- foe_boots |>
   get_ci(level=0.95)
 
 foe_boots_dist <- foe_boots|>
-  ggplot(aes(x=ATE))+geom_histogram(aes(y=after_stat(density)))+geom_vline(xintercept=unlist(foe_95))+labs(title = "Repeated Sampling of Case Outcome Difference Between Republican / Democrat Judges in Freedom of Expression", x = "For or Against Index")+theme(plot.title = element_text(size = 9))
+  ggplot(aes(x=ATE))+geom_histogram(aes(y=after_stat(density)))+geom_vline(xintercept=unlist(foe_95))+labs(title = "Repeated Sampling of Case Outcome Difference Between Republican / Democrat Judges in Freedom of Expression", x = "For or Against Index")+theme(plot.title = element_text(size = 7))
 
 foe_boots_dist
 
@@ -282,7 +282,7 @@ foe_boots_dist
 
 Partisan Average Outcomes in Freedom of Expression Cases
 
-Regression: After running a linear regression for Environmental Protection cases, the Y intercept is 0.583 when the ruling judge's political party is not Republican, or conversely, when the judge is a Democrat. This indicates that on the 0-1 index of ruling against or in favor of a petitioner, Democrat judges have an average ruling outcome of 0.410 points. This means that if a Democrat judge were to become Republican, there would be an expected -0.044 point decrease in average case outcome in favor of a defendant / petitioner. The median of the bootstrap distribution appears to be centered around this point difference. Compared to other categories of cases, the difference in case outcome by judge party, is very slim.
+Regression: After running a linear regression for Environmental Protection cases, the Y intercept is 0.583 when the ruling judge's political party is not Republican, or conversely, when the judge is a Democrat. This indicates that on the 0-1 index of ruling against or in favor of a petitioner, Democrat judges have an average ruling outcome of 0.583 points. This means that if a Democrat judge were to become Republican, there would be an expected -0.044 point decrease in average case outcome in favor of a defendant / petitioner. The median of the bootstrap distribution appears to be centered around this point difference. Compared to other categories of cases, the difference in case outcome by judge party, is very slim.
 
 Null hypothesis: After taking the difference in means for case outcome by party, we create a bootstrap distribution with repeated sampling of this difference. A 95% confidence interval is employed, shown by the two vertical lines on the graph. A 95% confidence interval means that across the repeated samples, the true value of difference in case outcome by political party will fall within the interval. If there is no difference at all, which would be our null hypothesis, this would be indicated by 0 falling within the confidence interval. This DOES happen here, with 0 falling with the lower and upper bounds. Thus, we should fail to reject the null hypothesis and as such, cannot find a statistically significant difference between judge parties in freedom of expression cases.
 
@@ -320,7 +320,7 @@ fore_95 <- fore_boots |>
   get_ci(level=0.95)
 
 fore_boots_dist <- fore_boots|>
-  ggplot(aes(x=ATE))+geom_histogram(aes(y=after_stat(density)))+geom_vline(xintercept=unlist(fore_95))+labs(title = "Repeated Sampling of Case Outcome Difference Between Republican / Democrat Judges in Freedom of Religion", x = "For or Against Index")+theme(plot.title = element_text(size = 9))
+  ggplot(aes(x=ATE))+geom_histogram(aes(y=after_stat(density)))+geom_vline(xintercept=unlist(fore_95))+labs(title = "Repeated Sampling of Case Outcome Difference Between Republican / Democrat Judges in Freedom of Religion", x = "For or Against Index")+theme(plot.title = element_text(size = 7))
 
 fore_boots_dist
 
@@ -328,7 +328,7 @@ fore_boots_dist
 
 Partisan Average Outcomes in Freedom of Religion Cases
 
-Regression: After running a linear regression for Environmental Protection cases, the Y intercept is 0.610 when the ruling judge's political party is not Republican, or conversely, when the judge is a Democrat. This indicates that on the 0-1 index of ruling against or in favor of a petitioner, Democrat judges have an average ruling outcome of 0.410 points. This means that if a Democrat judge were to become Republican, there would be an expected -0.151 point decrease in average case outcome in favor of a defendant / petitioner. The median of the bootstrap distribution appears to be centered around this point difference.
+Regression: After running a linear regression for Environmental Protection cases, the Y intercept is 0.610 when the ruling judge's political party is not Republican, or conversely, when the judge is a Democrat. This indicates that on the 0-1 index of ruling against or in favor of a petitioner, Democrat judges have an average ruling outcome of 0.610 points. This means that if a Democrat judge were to become Republican, there would be an expected -0.151 point decrease in average case outcome in favor of a defendant / petitioner. The median of the bootstrap distribution appears to be centered around this point difference.
 
 Null hypothesis: After taking the difference in means for case outcome by party, we create a bootstrap distribution with repeated sampling of this difference. A 95% confidence interval is employed, shown by the two vertical lines on the graph. A 95% confidence interval means that across the repeated samples, the true value of difference in case outcome by political party will fall within the interval. If there is no difference at all, which would be our null hypothesis, this would be indicated by 0 falling within the confidence interval. However, this does not happen above, leading us to conclude that there is a statistically significant difference between Environmental Protection cases decided by Republican and Democrat judges. 
 
@@ -360,12 +360,13 @@ rd_boots <- rd |>
     ATE = Democrat - Republican
   )
 
+#CI
 rd_95 <- rd_boots |>
   select(replicate, ATE)|>
   get_ci(level=0.95)
 
 rd_boots_dist <- rd_boots|>
-  ggplot(aes(x=ATE))+geom_histogram(aes(y=after_stat(density)))+geom_vline(xintercept=unlist(rd_95))+labs(title = "Repeated Sampling of Case Outcome Difference Between Republican / Democrat Judges in Racial Discrimination", x = "For or Against Index")+theme(plot.title = element_text(size = 9))
+  ggplot(aes(x=ATE))+geom_histogram(aes(y=after_stat(density)))+geom_vline(xintercept=unlist(rd_95))+labs(title = "Repeated Sampling of Case Outcome Difference Between Republican / Democrat Judges in Racial Discrimination", x = "For or Against Index")+theme(plot.title = element_text(size = 7))
 
 rd_boots_dist
 
@@ -374,7 +375,7 @@ rd_boots_dist
 
 Partisan Average Outcomes in Racial Discrimination Cases
 
-Regression: After running a linear regression for Environmental Protection cases, the Y intercept is 0.610 when the ruling judge's political party is not Republican, or conversely, when the judge is a Democrat. This indicates that on the 0-1 index of ruling against or in favor of a petitioner, Democrat judges have an average ruling outcome of 0.355 points. This means that if a Democrat judge were to become Republican, there would be an expected -0.090 point decrease in average case outcome in favor of a defendant / petitioner. The median of the bootstrap distribution appears to be centered around this point difference.
+Regression: After running a linear regression for Environmental Protection cases, the Y intercept is 0.355 when the ruling judge's political party is not Republican, or conversely, when the judge is a Democrat. This indicates that on the 0-1 index of ruling against or in favor of a petitioner, Democrat judges have an average ruling outcome of 0.355 points. This means that if a Democrat judge were to become Republican, there would be an expected -0.090 point decrease in average case outcome in favor of a defendant / petitioner. The median of the bootstrap distribution appears to be centered around this point difference.
 
 Null hypothesis: After taking the difference in means for case outcome by party, we create a bootstrap distribution with repeated sampling of this difference. A 95% confidence interval is employed, shown by the two vertical lines on the graph. A 95% confidence interval means that across the repeated samples, the true value of difference in case outcome by political party will fall within the interval. If there is no difference at all, which would be our null hypothesis, this would be indicated by 0 falling within the confidence interval. However, this does not happen above, leading us to conclude that there is a statistically significant difference between Environmental Protection cases decided by Republican and Democrat judges. 
 
